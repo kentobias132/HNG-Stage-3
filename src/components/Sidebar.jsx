@@ -3,10 +3,10 @@ import React from "react";
 
 const Sidebar = () => {
   return (
-    <aside className="bg-white p-4 shadow-md w-1/5 max-w-52">
+    <aside className="bg-white p-4 w-1/6 max-w-56 hidden sm:flex flex-col items-center pl-16">
       <div className="mb-4 flex flex-col items-center">
         <ul>
-          <h3 className="font-bold">Category</h3>
+          <h3 className="font-bold text-lg">Category</h3>
           <li className="py-0.5 text-[#2D16BB]">Dress</li>
           <li className="py-0.5">T-shirt</li>
           <li className="py-0.5">Sweatshirt</li>
@@ -30,7 +30,7 @@ const Sidebar = () => {
               <input type="checkbox" name="Mini" id="" /> Mini
             </label>
             <label className="py-0.5" for="Midi">
-              <input type="checkbox" name="Midi" id="" /> Miditrttttttttt
+              <input type="checkbox" name="Midi" id="" /> Midi
             </label>
             <label className="py-0.5" for="Long">
               <input type="checkbox" name="Long" id="" /> Long

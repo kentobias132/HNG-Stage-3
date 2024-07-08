@@ -1,26 +1,44 @@
 import React, { useContext } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import Header from "./components/Header";
-import ProductListing from "./components/ProductListing";
-import Footer from "./components/Footer";
 import CartPage from "./components/CartPage";
 import CheckoutPage from "./components/CheckOutPage";
 import { CartContext } from "./context/CartContext";
-import Root from "./pages/root";
+import MainView from "./components/MainView";
+import PageView from "./components/PageView";
+import ProductDetail from "./components/ProductDetail";
+import ProductView from "./components/ProductView";
 
 const appRouter = createBrowserRouter([
-  { path: "/", element: <Root /> },
-  { path: "/cart", element: <CartPage /> },
+  {
+    path: "/",
+    element: <MainView />,
+  },
+  {
+    path: "product",
+    element: <ProductView />,
+    children: [
+      {
+        path: ":id",
+        element: <ProductDetail />,
+      },
+    ],
+  },
+  {
+    path: "/cart",
+    element: <PageView />,
+    children: [
+      { path: "", element: <CartPage /> },
+      { path: "checkout", element: <CheckoutPage /> },
+    ],
+  },
 ]);
 
 const App = () => {
-  // const { cart } = useContext(CartContext);
+  const { cart } = useContext(CartContext);
 
   return (
     <div>
-      {/* <Header cartCount={cart.length} /> */}
       <RouterProvider router={appRouter} />
-      {/* <Footer /> */}
     </div>
   );
 };

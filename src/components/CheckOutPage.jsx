@@ -1,145 +1,144 @@
 import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import {
-//   faCreditCard,
-//   faPaypal,
-//   faArrowLeft,
-// } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
+import { ChevronLeftIcon, TrashIcon } from "@heroicons/react/outline";
 
 const CheckoutPage = () => {
-  const { cart } = useContext(CartContext);
-  const navigate = useNavigate();
+  const { cart, updateQuantity, removeFromCart } = useContext(CartContext);
 
-  const getTotal = () => {
-    return cart.reduce(
-      (acc, product) => acc + product.price * product.quantity,
-      0
-    );
+  const handleQuantityChange = (id, e) => {
+    const quantity = parseInt(e.target.value);
+    if (quantity > 0) {
+      updateQuantity(id, quantity);
+    }
   };
 
+  const handleRemoveItem = (id) => {
+    removeFromCart(id);
+  };
+
+  const totalPrice = cart.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Shopping Cart</h1>
-      <div className="flex justify-between">
-        <div className="w-2/3">
-          {cart.map((product) => (
+    <div className="px-4 py-20 sm:pt-24 sm:p-8 bg-[#D9D9D9]">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Shopping Cart</h1>
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-0 lg:gap-10">
+        <div className="col-span-2 p-4">
+          {cart.map((item) => (
             <div
-              key={product.id}
-              className="flex justify-between items-center mb-4"
+              key={item.id}
+              className="flex items-center justify-between mb-4"
             >
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-24 h-24 object-cover"
-              />
-              <div className="flex-1 ml-4">
-                <h3 className="font-bold">{product.name}</h3>
-                <p>Size: {product.size}</p>
-                <div className="flex items-center">
-                  <label htmlFor="quantity" className="mr-2">
-                    Quantity:
-                  </label>
-                  <input
-                    type="number"
-                    id="quantity"
-                    min="1"
-                    value={product.quantity}
-                    readOnly
-                    className="border p-1 w-16"
-                  />
+              <div className="flex items-center space-x-4">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-24 h-24 object-contain"
+                />
+                <div>
+                  <h2 className="hidden sm:block font-semibold">{item.name}</h2>
+                  <div className="hidden sm:block">Size: {item.size}</div>
                 </div>
-                <p>Total Price: ${product.price * product.quantity}</p>
+              </div>
+              <div className="flex items-center space-x-4">
+                <select
+                  className="border p-2 rounded"
+                  value={item.quantity}
+                  onChange={(e) => handleQuantityChange(item.id, e)}
+                >
+                  {[...Array(10).keys()].map((n) => (
+                    <option key={n + 1} value={n + 1}>
+                      {n + 1}
+                    </option>
+                  ))}
+                </select>
+                <div>${item.price * item.quantity}</div>
+                <button onClick={() => handleRemoveItem(item.id)}>
+                  <TrashIcon className="h-6 w-6 text-red-500" />
+                </button>
               </div>
             </div>
           ))}
-          <button
-            onClick={() => navigate("/")}
-            className="mt-4 p-2 bg-gray-500 text-white rounded flex items-center"
-          >
-            {/* <FontAwesomeIcon icon={faArrowLeft} className="mr-2" /> */}
-            Continue Shopping
-          </button>
+
+          <div className="block py-3 sm:flex sm:flex-row-reverse justify-between">
+            <div className="flex justify-end mt-4">
+              <div>
+                <div className="text-lg py-1 font-semibold">
+                  Sub Total:{" "}
+                  <span className="ml-10 text-left">${totalPrice}</span>
+                </div>
+                <div className="text-lg flex justify-between py-1 font-semibold">
+                  Shipping Fee: <span>Free</span>
+                </div>
+                <div className="text-xl pt-3 flex justify-between border-t border-black mt-5 font-bold">
+                  <p>Total:</p> <span className="">${totalPrice}</span>
+                </div>
+              </div>
+            </div>
+
+            <Link
+              to="/"
+              className="text-black py-8 sm:py-0 flex items-center font-bold text-lg mt-auto"
+            >
+              <ChevronLeftIcon className="h-4 w-4 text-blue-800" />
+              <p>Continue Shopping</p>
+            </Link>
+          </div>
         </div>
-        <div className="w-1/3 p-4 border rounded">
-          <h2 className="font-bold mb-4">Payment Info</h2>
-          <form>
-            <div className="mb-4">
-              <label htmlFor="payment-method" className="block mb-1">
-                Payment Method
-              </label>
-              <div className="flex items-center">
-                <input
-                  type="radio"
-                  id="credit-card"
-                  name="payment-method"
-                  value="Credit Card"
-                />
-                <label htmlFor="credit-card" className="ml-2 flex items-center">
-                  {/* <FontAwesomeIcon icon={faCreditCard} className="mr-2" />{" "} */}
+        <div className="bg-gray-100 p-4 rounded-lg">
+          <h2 className="text-xl font-semibold mb-4">Payment Info</h2>
+          <form className="space-y-4">
+            <div>
+              <label className="block font-semibold mb-1">Payment Method</label>
+              <div className="flex items-center space-x-4">
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="creditCard"
+                    className="mr-2"
+                  />
                   Credit Card
                 </label>
-              </div>
-              <div className="flex items-center mt-2">
-                <input
-                  type="radio"
-                  id="paypal"
-                  name="payment-method"
-                  value="Paypal"
-                />
-                <label htmlFor="paypal" className="ml-2 flex items-center">
-                  {/* <FontAwesomeIcon icon={faPaypal} className="mr-2" /> Paypal */}
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="paypal"
+                    className="mr-2"
+                  />
+                  Paypal
                 </label>
               </div>
             </div>
-            <div className="mb-4">
-              <label htmlFor="name" className="block mb-1">
-                Name on Card
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                className="border p-2 w-full"
-              />
+            <div>
+              <label className="block font-semibold mb-1">Name on Card</label>
+              <input type="text" className="border p-2 rounded w-full" />
             </div>
-            <div className="mb-4">
-              <label htmlFor="cardNumber" className="block mb-1">
-                Card Number
-              </label>
-              <input
-                type="text"
-                id="cardNumber"
-                name="cardNumber"
-                className="border p-2 w-full"
-              />
+            <div>
+              <label className="block font-semibold mb-1">Card Number</label>
+              <input type="text" className="border p-2 rounded w-full" />
             </div>
-            <div className="mb-4">
-              <label htmlFor="expiryDate" className="block mb-1">
-                Expiration Date
-              </label>
-              <input
-                type="text"
-                id="expiryDate"
-                name="expiryDate"
-                className="border p-2 w-full"
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="cvv" className="block mb-1">
-                CVV
-              </label>
-              <input
-                type="text"
-                id="cvv"
-                name="cvv"
-                className="border p-2 w-full"
-              />
+            <div className="flex space-x-4">
+              <div>
+                <label className="block font-semibold mb-1">
+                  Expiration Date
+                </label>
+                <input type="text" className="border p-2 rounded w-full" />
+              </div>
+              <div>
+                <label className="block font-semibold mb-1">CVV</label>
+                <input type="text" className=" mb-8 p-2 rounded w-full" />
+              </div>
             </div>
             <button
               type="submit"
-              className="bg-blue-500 text-white p-2 rounded w-full"
+              className="w-full bg-[#2D16BB]  text-white p-4 rounded"
             >
               Checkout
             </button>

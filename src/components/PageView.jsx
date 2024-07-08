@@ -4,7 +4,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { CartContext } from "../context/CartContext";
 
-const Root = () => {
+const PageView = () => {
   const { cart } = useContext(CartContext);
 
   return (
@@ -16,4 +16,4 @@ const Root = () => {
   );
 };
 
-export default Root;
+export default PageView;
