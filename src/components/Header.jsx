@@ -25,11 +25,16 @@ const Header = ({ cartCount }) => {
           <span className="mr-3 hidden sm:block">Wishlist</span>
           <HeartIcon className="h-6 w-6" />
         </button>
-        <Link to={"/cart"}>
+        <Link to="/cart" className="relative">
           <button className="bg-[#2D16BB] flex items-center bg-opacity-50 px-2.5 py-1.5 rounded-md text-[#2D16BB]">
-            <span className="mr-3 hidden sm:block">Cart ({cartCount})</span>
+            <span className="mr-3">Cart</span>
             <ShoppingCartIcon className="h-6 w-6" />
           </button>
+          {cartCount > 0 && (
+            <span className="absolute top-0 right-0 -mt-1 -mr-1 bg-red-600 text-white rounded-full px-2 text-xs">
+              {cartCount}
+            </span>
+          )}
         </Link>
         <button className="flex items-center">
           <UserIcon className="h-6 w-6" />
