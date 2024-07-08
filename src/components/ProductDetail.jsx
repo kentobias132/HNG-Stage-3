@@ -101,7 +101,7 @@ const ProductDetail = () => {
               .filter((p) => p.id !== product.id)
               .map((similarProduct) => (
                 <div key={similarProduct.id} className="flex-shrink-0 w-60">
-                  <Link to={""} >
+                  <Link to={`/product/${similarProduct.id}`} >
                   <div className="border p-4 rounded-lg">
                     <img
                       src={similarProduct.image}
