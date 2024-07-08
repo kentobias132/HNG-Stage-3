@@ -25,7 +25,7 @@ const ProductListing = () => {
         <div>
           <h1 className="font-bold text-2xl p-4">Dress</h1>
           <div className="flex px-4 flex-wrap">
-            <button className="bg-gray-300 text-gray-500 py-0.5 px-3.5 mr-2 mb-2 rounded-md">
+            <button className=" hover:bg-[#2D16BB] hover:bg-opacity-50% bg-gray-300 text-gray-500 py-0.5 px-3.5 mr-2 mb-2 rounded-md">
               Midi
             </button>
             <button className="bg-gray-300 text-gray-500 py-0.5 px-3.5 mr-2 mb-2 rounded-md">
