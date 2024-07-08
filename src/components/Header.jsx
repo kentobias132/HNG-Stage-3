@@ -27,7 +27,7 @@ const Header = ({ cartCount }) => {
         </button>
         <Link to="/cart" className="relative">
           <button className="bg-[#2D16BB] flex items-center bg-opacity-50 px-2.5 py-1.5 rounded-md text-[#2D16BB]">
-            <span className="mr-3">Cart</span>
+            <span className=" hidden sm:block mr-3">Cart</span>
             <ShoppingCartIcon className="h-6 w-6" />
           </button>
           {cartCount > 0 && (
