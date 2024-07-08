@@ -14,11 +14,11 @@ const ProductListing = () => {
         <div className="py-7">
           <span className="flex items-center">
             <HomeIcon className="h-6 w-6" />
-            <p className="ml-1">Mainpage</p>
+            <button  className="hover:text-blue-800 ml-1">Mainpage</button >
             <ChevronRightIcon className="h-4 w-4" />
-            <p className="text-gray-500">Category</p>
+            <button  className="hover:text-blue-800 text-gray-500">Category</button >
             <ChevronRightIcon className="h-4 w-4" />
-            <p className="text-gray-500">Dress</p>
+            <button  className="hover:text-blue-800 text-gray-500">Dress</button >
           </span>
         </div>
 
