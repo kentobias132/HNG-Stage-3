@@ -38,7 +38,7 @@ const ProductCard = ({ product }) => {
 
         <button
           onClick={() => addToCart({ ...product, quantity: 1 })}
-          className="mt-2 p-2 bg-[#2D16BB] text-black rounded"
+          className="mt-2 p-2 bg-[#2D16BB] hover:bg-opacity-50 text-black rounded"
         >
           <ShoppingCartIcon className="h-5 w-5" />
         </button>
