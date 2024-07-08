@@ -7,6 +7,7 @@ import MainView from "./components/MainView";
 import PageView from "./components/PageView";
 import ProductDetail from "./components/ProductDetail";
 import ProductView from "./components/ProductView";
+import useScrollToTop from './useScrollToTop';
 
 const appRouter = createBrowserRouter([
   {
@@ -35,6 +36,7 @@ const appRouter = createBrowserRouter([
 
 const App = () => {
   const { cart } = useContext(CartContext);
+  useScrollToTop();
 
   return (
     <div>
