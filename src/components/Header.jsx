@@ -11,7 +11,15 @@ const Header = ({ cartCount }) => {
     // <header className="bg-white shadow-md p-4 flex justify-between items-center">
     <header className="fixed top-0 left-0 right-0 bg-white shadow-md p-4 flex justify-between items-center z-50">
       <div className="text-2xl font-bold">
-        <Link to={"/"}>Lammie</Link>
+        <Link
+          to={"/"}
+          className="w-full"
+          onClick={() => {
+            window.scroll(0, 0);
+          }}
+        >
+          Lammie
+        </Link>
       </div>
       <input
         type="text"
@@ -25,7 +33,13 @@ const Header = ({ cartCount }) => {
           <span className="mr-3 hidden sm:block">Wishlist</span>
           <HeartIcon className="h-6 w-6" />
         </button>
-        <Link to="/cart" className="relative">
+        <Link
+          to="/cart"
+          onClick={() => {
+            window.scroll(0, 0);
+          }}
+          className="relative"
+        >
           <button className="bg-[#2D16BB] flex items-center bg-opacity-50 px-2.5 py-1.5 rounded-md text-[#2D16BB]">
             <span className=" hidden sm:block mr-3">Cart</span>
             <ShoppingCartIcon className="h-6 w-6" />

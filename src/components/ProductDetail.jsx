@@ -4,7 +4,6 @@ import { useContext } from "react";
 import { useParams } from "react-router-dom";
 import products from "../context/productData";
 import { Link } from "react-router-dom";
-import { ShoppingCartIcon } from "@heroicons/react/outline";
 
 const ProductDetail = () => {
   const { addToCart } = useContext(CartContext);
@@ -101,20 +100,25 @@ const ProductDetail = () => {
               .filter((p) => p.id !== product.id)
               .map((similarProduct) => (
                 <div key={similarProduct.id} className="flex-shrink-0 w-60">
-                  <Link to={`/product/${similarProduct.id}`} >
-                  <div className="border p-4 rounded-lg">
-                    <img
-                      src={similarProduct.image}
-                      alt={similarProduct.name}
-                      className="w-full h-48 object-contain mb-4 rounded-lg"
-                    />
-                    <h3 className="text-lg font-bold text-center">
-                      {similarProduct.name}
-                    </h3>
-                    <p className="text-gray-500 font-bold text-center">
-                      ${similarProduct.price}
-                    </p>
-                  </div>
+                  <Link
+                    onClick={() => {
+                      window.scroll(0, 0);
+                    }}
+                    to={`/product/${similarProduct.id}`}
+                  >
+                    <div className="border p-4 rounded-lg">
+                      <img
+                        src={similarProduct.image}
+                        alt={similarProduct.name}
+                        className="w-full h-48 object-contain mb-4 rounded-lg"
+                      />
+                      <h3 className="text-lg font-bold text-center">
+                        {similarProduct.name}
+                      </h3>
+                      <p className="text-gray-500 font-bold text-center">
+                        ${similarProduct.price}
+                      </p>
+                    </div>
                   </Link>
                 </div>
               ))}
