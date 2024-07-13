@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import { CartContext } from "../context/CartContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ChevronLeftIcon, TrashIcon } from "@heroicons/react/outline";
+const img_base_url = "https://api.timbu.cloud/images/";
 
 const CheckoutPage = () => {
   const { cart, updateQuantity, removeFromCart } = useContext(CartContext);
@@ -12,13 +13,14 @@ const CheckoutPage = () => {
       updateQuantity(id, quantity);
     }
   };
+  const navigate = useNavigate();
 
   const handleRemoveItem = (id) => {
     removeFromCart(id);
   };
 
   const totalPrice = cart.reduce(
-    (total, item) => total + item.price * item.quantity,
+    (total, item) => total + item.current_price[0].NGN[0] * item.quantity,
     0
   );
 
@@ -36,7 +38,7 @@ const CheckoutPage = () => {
             >
               <div className="flex items-center space-x-4">
                 <img
-                  src={item.image}
+                  src={`${img_base_url}${item.photos[0].url}`}
                   alt={item.name}
                   className="w-24 h-24 object-contain"
                 />
@@ -57,7 +59,7 @@ const CheckoutPage = () => {
                     </option>
                   ))}
                 </select>
-                <div>${item.price * item.quantity}</div>
+                <div>${item.current_price[0].NGN[0] * item.quantity}</div>
                 <button onClick={() => handleRemoveItem(item.id)}>
                   <TrashIcon className="h-6 w-6 text-red-500" />
                 </button>
@@ -137,7 +139,10 @@ const CheckoutPage = () => {
               </div>
             </div>
             <button
-              type="submit"
+              // type="submit"
+              onClick={() =>
+                navigate("/cart/checkout/success", window.scroll(0, 0))
+              }
               className="w-full bg-[#2D16BB]  text-white p-4 rounded"
             >
               Checkout

@@ -1,15 +1,29 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import { useContext } from "react";
 import { useParams } from "react-router-dom";
-import products from "../context/productData";
 import { Link } from "react-router-dom";
+
+const img_base_url = "https://api.timbu.cloud/images/";
+
+const getProducts = async () => {
+  const response = await fetch(
+    "/api/products?organization_id=6ee49d8f96e64d368c9ca1c7e09a6eb5&reverse_sort=false&page=1&size=10&Appid=F3CQ0A1IPWNNXJL&Apikey=f8f029814110445a91cefa3da53899a120240713001906164641"
+  );
+  const data = await response.json();
+  console.log(data.items);
+  return data.items;
+};
+
+const products = await getProducts();
 
 const ProductDetail = () => {
   const { addToCart } = useContext(CartContext);
 
   const { id } = useParams();
-  const product = products.find((p) => p.id === parseInt(id));
+  const product = products.find((p) => p.id === id);
+  console.log(product);
+
   const scrollRef = useRef(null);
 
   if (!product) {
@@ -29,36 +43,45 @@ const ProductDetail = () => {
       <div className="flex flex-col items-center lg:flex-row lg:space-x-8">
         <div className="lg:w-1/2 w-full mb-8 lg:mb-0">
           <img
-            src={product.image}
+            src={`${img_base_url}${product.photos[0].url}`}
             alt={product.name}
             className="w-full h-auto rounded-lg"
           />
         </div>
         <div className="lg:w-1/2 w-full">
           <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
-          <p className="text-2xl font-semibold mb-4">${product.price}</p>
+          <p className="text-2xl font-semibold mb-4">
+            ${product.current_price[0].NGN[0]}
+          </p>
           <div className="flex items-center mb-4">
             <span className="mr-2">Color:</span>
-            {product.colors.map((color) => (
-              <button
-                key={color}
-                className={`w-6 h-6 rounded-full border-2 border-gray-300 mr-2 ${
-                  color === "black"
-                    ? "bg-black"
-                    : color === "blue"
-                    ? "bg-blue-600"
-                    : "bg-red-600"
-                }`}
-              ></button>
-            ))}
+
+            <button
+              className={
+                "w-6 h-6 bg-black rounded-full border-2 border-gray-300 mr-2 "
+              }
+            ></button>
+            <button
+              className={
+                "w-6 h-6 bg-red-600 rounded-full border-2 border-gray-300 mr-2 "
+              }
+            ></button>
+            <button
+              className={
+                "w-6 h-6 bg-blue-600 rounded-full border-2 border-gray-300 mr-2 "
+              }
+            ></button>
           </div>
           <div className="mb-4">
             <span className="mr-2">Size:</span>
-            {product.sizes.map((size) => (
-              <button key={size} className="border px-3 py-1 rounded-md mr-2">
-                {size}
-              </button>
-            ))}
+
+            <button className="border px-3 py-1 rounded-md mr-2">XS</button>
+
+            <button className="border px-3 py-1 rounded-md mr-2">S</button>
+
+            <button className="border px-3 py-1 rounded-md mr-2">M</button>
+            <button className="border px-3 py-1 rounded-md mr-2">L</button>
+            <button className="border px-3 py-1 rounded-md mr-2">XL</button>
           </div>
           <button
             onClick={() => addToCart({ ...product, quantity: 1 })}
@@ -69,14 +92,14 @@ const ProductDetail = () => {
           <div className="mt-4">
             <h2 className="text-xl font-semibold mb-2">Product Detail</h2>
             <ul className="list-disc list-inside">
-              {product.details.map((detail, index) => (
+              {/* {product.details.map((detail, index) => (
                 <li key={index}>{detail}</li>
-              ))}
+              ))} */}
             </ul>
             <h2 className="text-xl font-semibold mt-4 mb-2">Material</h2>
-            <p>{product.material}</p>
+            <p>Cotton 100%, Polythene 20%</p>
             <h2 className="text-xl font-semibold mt-4 mb-2">Brand</h2>
-            <p>{product.brand}</p>
+            <p>Lammie Amaris</p>
           </div>
           <Link to="/" className="mt-4 text-blue-600 underline">
             &larr; Back to catalog
@@ -108,7 +131,7 @@ const ProductDetail = () => {
                   >
                     <div className="border p-4 rounded-lg">
                       <img
-                        src={similarProduct.image}
+                        src={`${img_base_url}${similarProduct.photos[0].url}`}
                         alt={similarProduct.name}
                         className="w-full h-48 object-contain mb-4 rounded-lg"
                       />
@@ -116,7 +139,7 @@ const ProductDetail = () => {
                         {similarProduct.name}
                       </h3>
                       <p className="text-gray-500 font-bold text-center">
-                        ${similarProduct.price}
+                        ${similarProduct.current_price[0].NGN[0]}
                       </p>
                     </div>
                   </Link>

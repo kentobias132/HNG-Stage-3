@@ -1,10 +1,55 @@
-import React from "react";
-import products from "../context/productData";
+// ProductListing.js
+import React, { useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
 import Sidebar from "./Sidebar";
 import { ChevronRightIcon, HomeIcon } from "@heroicons/react/outline";
 
 const ProductListing = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const pageSize = 10;
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(
+          `/api/products?organization_id=6ee49d8f96e64d368c9ca1c7e09a6eb5&reverse_sort=false&page=${currentPage}&size=${pageSize}&Appid=F3CQ0A1IPWNNXJL&Apikey=f8f029814110445a91cefa3da53899a120240713001906164641`
+        );
+        const data = await response.json();
+        console.log(data);
+        setProducts(data.items);
+        setTotalPages(Math.ceil(data.total / pageSize));
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [currentPage]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+    window.scrollTo(0, 0);
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+    window.scrollTo(0, 0);
+  };
+
   return (
     <div className="flex font-semibold py-20 p-6">
       <div className="">
@@ -14,11 +59,13 @@ const ProductListing = () => {
         <div className="py-7">
           <span className="flex items-center">
             <HomeIcon className="h-6 w-6" />
-            <button  className="hover:text-blue-800 ml-1">Mainpage</button >
+            <button className="hover:text-blue-800 ml-1">Mainpage</button>
             <ChevronRightIcon className="h-4 w-4" />
-            <button  className="hover:text-blue-800 text-gray-500">Category</button >
+            <button className="hover:text-blue-800 text-gray-500">
+              Category
+            </button>
             <ChevronRightIcon className="h-4 w-4" />
-            <button  className="hover:text-blue-800 text-gray-500">Dress</button >
+            <button className="hover:text-blue-800 text-gray-500">Dress</button>
           </span>
         </div>
 
@@ -41,6 +88,27 @@ const ProductListing = () => {
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
+        </div>
+
+        <div className="flex justify-center mt-6">
+          <button
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+            className={`mr-2 px-4 py-2 border rounded ${
+              currentPage === 1 ? "cursor-not-allowed" : ""
+            }`}
+          >
+            Previous
+          </button>
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className={`ml-2 px-4 py-2 border rounded ${
+              currentPage === totalPages ? "cursor-not-allowed" : ""
+            }`}
+          >
+            Next
+          </button>
         </div>
       </div>
     </div>

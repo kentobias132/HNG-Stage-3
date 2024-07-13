@@ -5,13 +5,13 @@ import Footer from "../components/Footer";
 import ProductListing from "./ProductListing";
 import { CartContext } from "../context/CartContext";
 
-const MainView = () => {
+const MainView = ({ products }) => {
   const { cart } = useContext(CartContext);
 
   return (
     <div>
       <Header cartCount={cart.length} />
-      <ProductListing />
+      <ProductListing products={products} />
       <Outlet />
       <Footer />
     </div>

@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { CartContext } from "../context/CartContext";
 import { Link } from "react-router-dom";
 import { ShoppingCartIcon } from "@heroicons/react/outline";
+const img_base_url = "https://api.timbu.cloud/images/";
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useContext(CartContext);
@@ -16,7 +17,7 @@ const ProductCard = ({ product }) => {
         }}
       >
         <img
-          src={product.image}
+          src={`${img_base_url}${product.photos[0].url}`}
           alt={product.name}
           className="w-full h-48 object-contain"
         />
@@ -25,7 +26,9 @@ const ProductCard = ({ product }) => {
       <div className="flex  justify-between">
         <div>
           <p className="text-gray-500">Price</p>
-          <p className="text-black font-bold">${product.price}</p>
+          <p className="text-black font-bold">
+            ${product.current_price[0].NGN[0]}
+          </p>
         </div>
 
         <button

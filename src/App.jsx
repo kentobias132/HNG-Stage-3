@@ -6,6 +6,7 @@ import MainView from "./components/MainView";
 import PageView from "./components/PageView";
 import ProductDetail from "./components/ProductDetail";
 import ProductView from "./components/ProductView";
+import SuccessPage from "./components/SuccessPage";
 
 const appRouter = createBrowserRouter([
   {
@@ -27,7 +28,11 @@ const appRouter = createBrowserRouter([
     element: <PageView />,
     children: [
       { path: "", element: <CartPage /> },
-      { path: "checkout", element: <CheckoutPage /> },
+      {
+        path: "checkout",
+        element: <CheckoutPage />,
+      },
+      { path: "checkout/success", element: <SuccessPage /> },
     ],
   },
 ]);

@@ -7,13 +7,16 @@ import {
   ChevronRightIcon,
 } from "@heroicons/react/outline";
 
+const img_base_url = "https://api.timbu.cloud/images/";
+
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity } = useContext(CartContext);
   const navigate = useNavigate();
 
   const getTotal = () => {
     return cart.reduce(
-      (acc, product) => acc + product.price * product.quantity,
+      (acc, product) =>
+        acc + product.current_price[0].NGN[0] * product.quantity,
       0
     );
   };
@@ -43,14 +46,16 @@ const CartPage = () => {
               className="flex bg-[#D9D9D9] md:flex-row flex-col items-center fl p-4 border"
             >
               <img
-                src={product.image}
+                src={`${img_base_url}${product.photos[0].url}`}
                 alt={product.name}
                 className="w-64 h-64 object-contain"
               />
               <div className="flex flex-col w-full px-3">
                 <div className="flex w-full justify-between">
                   <h3 className="text-lg py-3 font-bold">{product.name}</h3>
-                  <p className="text-lg py-3 font-bold">${product.price}</p>
+                  <p className="text-lg py-3 font-bold">
+                    ${product.current_price[0].NGN[0]}
+                  </p>
                 </div>
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                   <p className="text-black font-bold py-3">
@@ -119,7 +124,7 @@ const CartPage = () => {
               </div>
             </div>
             <button
-              onClick={() => navigate("/cart/checkout")}
+              onClick={() => navigate("/cart/checkout", window.scroll(0, 0))}
               className="w-full mt-6 py-4 bg-[#2D16BB] text-white rounded"
             >
               Continue
