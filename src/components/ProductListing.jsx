@@ -1,11 +1,10 @@
-// ProductListing.js
 import React, { useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
 import Sidebar from "./Sidebar";
 import { ChevronRightIcon, HomeIcon } from "@heroicons/react/outline";
 
 const ProductListing = () => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState({});
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -14,19 +13,23 @@ const ProductListing = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true);
       try {
         const response = await fetch(
-          `/api/products?organization_id=6ee49d8f96e64d368c9ca1c7e09a6eb5&reverse_sort=false&page=${currentPage}&size=${pageSize}&Appid=F3CQ0A1IPWNNXJL&Apikey=f8f029814110445a91cefa3da53899a120240713001906164641`
+          `/api/products?organization_id=6ee49d8f96e64d368c9ca1c7e09a6eb5&reverse_sort=false&page=${currentPage}&size=${pageSize}&Appid=${
+            import.meta.env.VITE_APPID
+          }&Apikey=${import.meta.env.VITE_APIKEY}`
         );
         const data = await response.json();
-        console.log(data);
-        setProducts(data.items);
+        setProducts((prevProducts) => ({
+          ...prevProducts,
+          [currentPage]: data.items,
+        }));
         setTotalPages(Math.ceil(data.total / pageSize));
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching products:", error);
-        setLoading(false);
       }
+      setLoading(false);
     };
 
     fetchProducts();
@@ -39,15 +42,15 @@ const ProductListing = () => {
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
+      window.scrollTo(0, 0);
     }
-    window.scrollTo(0, 0);
   };
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
+      window.scrollTo(0, 0);
     }
-    window.scrollTo(0, 0);
   };
 
   return (
@@ -72,10 +75,10 @@ const ProductListing = () => {
         <div>
           <h1 className="font-bold text-2xl p-4">Dress</h1>
           <div className="flex px-4 flex-wrap">
-            <button className=" hover:bg-[#2D16BB] hover:bg-opacity-50 bg-gray-300 text-gray-500 py-0.5 px-3.5 mr-2 mb-2 rounded-md">
+            <button className="hover:bg-[#2D16BB] hover:bg-opacity-50 bg-gray-300 text-gray-500 py-0.5 px-3.5 mr-2 mb-2 rounded-md">
               Midi
             </button>
-            <button className=" hover:bg-[#2D16BB] hover:bg-opacity-50 bg-gray-300 text-gray-500 py-0.5 px-3.5 mr-2 mb-2 rounded-md">
+            <button className="hover:bg-[#2D16BB] hover:bg-opacity-50 bg-gray-300 text-gray-500 py-0.5 px-3.5 mr-2 mb-2 rounded-md">
               Black
             </button>
             <button className="hover:bg-[#2D16BB] hover:bg-opacity-50 bg-gray-300 text-gray-500 py-0.5 px-3.5 mr-2 mb-2 rounded-md">
@@ -85,8 +88,12 @@ const ProductListing = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7 p-4 justify-center items-center">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
+          {products[currentPage]?.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              pageNum={currentPage}
+            />
           ))}
         </div>
 

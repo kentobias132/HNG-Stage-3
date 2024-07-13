@@ -1,30 +1,51 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
+import { useParams, Link } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
-import { useContext } from "react";
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
 
 const img_base_url = "https://api.timbu.cloud/images/";
 
-const getProducts = async () => {
-  const response = await fetch(
-    "/api/products?organization_id=6ee49d8f96e64d368c9ca1c7e09a6eb5&reverse_sort=false&page=1&size=10&Appid=F3CQ0A1IPWNNXJL&Apikey=f8f029814110445a91cefa3da53899a120240713001906164641"
-  );
-  const data = await response.json();
-  console.log(data.items);
-  return data.items;
-};
-
-const products = await getProducts();
-
 const ProductDetail = () => {
   const { addToCart } = useContext(CartContext);
-
   const { id } = useParams();
-  const product = products.find((p) => p.id === id);
-  console.log(product);
-
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [similarProducts, setSimilarProducts] = useState([]);
   const scrollRef = useRef(null);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      setLoading(true);
+      try {
+        // Fetch the product directly by ID
+        const productResponse = await fetch(
+          `/api/products/${id}?organization_id=6ee49d8f96e64d368c9ca1c7e09a6eb5&Appid=${
+            import.meta.env.VITE_APPID
+          }&Apikey=${import.meta.env.VITE_APIKEY}`
+        );
+        const productData = await productResponse.json();
+        setProduct(productData);
+        console.log(productData);
+
+        // Fetch the first page to get similar products
+        const response = await fetch(
+          `/api/products?organization_id=6ee49d8f96e64d368c9ca1c7e09a6eb5&reverse_sort=false&page=1&size=10&Appid=${
+            import.meta.env.VITE_APPID
+          }&Apikey=${import.meta.env.VITE_APIKEY}`
+        );
+        const data = await response.json();
+        setSimilarProducts(data.items.filter((p) => p.id !== id));
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      }
+      setLoading(false);
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   if (!product) {
     return <div>Product not found</div>;
@@ -51,11 +72,10 @@ const ProductDetail = () => {
         <div className="lg:w-1/2 w-full">
           <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
           <p className="text-2xl font-semibold mb-4">
-            ${product.current_price[0].NGN[0]}
+            ${product.current_price}
           </p>
           <div className="flex items-center mb-4">
             <span className="mr-2">Color:</span>
-
             <button
               className={
                 "w-6 h-6 bg-black rounded-full border-2 border-gray-300 mr-2 "
@@ -74,11 +94,8 @@ const ProductDetail = () => {
           </div>
           <div className="mb-4">
             <span className="mr-2">Size:</span>
-
             <button className="border px-3 py-1 rounded-md mr-2">XS</button>
-
             <button className="border px-3 py-1 rounded-md mr-2">S</button>
-
             <button className="border px-3 py-1 rounded-md mr-2">M</button>
             <button className="border px-3 py-1 rounded-md mr-2">L</button>
             <button className="border px-3 py-1 rounded-md mr-2">XL</button>
@@ -119,7 +136,7 @@ const ProductDetail = () => {
             ref={scrollRef}
             className="flex overflow-x-scroll scrollbar-hide space-x-4 p-4"
           >
-            {products
+            {similarProducts
               .filter((p) => p.id !== product.id)
               .map((similarProduct) => (
                 <div key={similarProduct.id} className="flex-shrink-0 w-60">

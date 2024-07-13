@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { ShoppingCartIcon } from "@heroicons/react/outline";
 const img_base_url = "https://api.timbu.cloud/images/";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, pageNum }) => {
   const { addToCart } = useContext(CartContext);
 
   return (

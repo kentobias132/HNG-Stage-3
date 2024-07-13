@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 
 const Header = ({ cartCount }) => {
   return (
-    // <header className="bg-white shadow-md p-4 flex justify-between items-center">
     <header className="fixed top-0 left-0 right-0 bg-white shadow-md p-4 flex justify-between items-center z-50">
       <div className="text-2xl font-bold">
         <Link
