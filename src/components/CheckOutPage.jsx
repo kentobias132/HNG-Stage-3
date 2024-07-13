@@ -20,7 +20,7 @@ const CheckoutPage = () => {
   };
 
   const totalPrice = cart.reduce(
-    (total, item) => total + item.current_price[0].NGN[0] * item.quantity,
+    (total, item) => total + item.current_price * item.quantity,
     0
   );
 
@@ -59,7 +59,7 @@ const CheckoutPage = () => {
                     </option>
                   ))}
                 </select>
-                <div>${item.current_price[0].NGN[0] * item.quantity}</div>
+                <div>${item.current_price * item.quantity}</div>
                 <button onClick={() => handleRemoveItem(item.id)}>
                   <TrashIcon className="h-6 w-6 text-red-500" />
                 </button>

@@ -15,8 +15,7 @@ const CartPage = () => {
 
   const getTotal = () => {
     return cart.reduce(
-      (acc, product) =>
-        acc + product.current_price[0].NGN[0] * product.quantity,
+      (acc, product) => acc + product.current_price * product.quantity,
       0
     );
   };
@@ -54,7 +53,7 @@ const CartPage = () => {
                 <div className="flex w-full justify-between">
                   <h3 className="text-lg py-3 font-bold">{product.name}</h3>
                   <p className="text-lg py-3 font-bold">
-                    ${product.current_price[0].NGN[0]}
+                    ${product.current_price}
                   </p>
                 </div>
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
