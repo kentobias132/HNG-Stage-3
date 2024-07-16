@@ -26,12 +26,13 @@ const ProductDetail = () => {
         setProduct(productData);
         console.log(productData);
 
-        // Fetch the first page to get similar products
+        // Fetch the page to get similar products
         const response = await fetch(
           `/api/products?organization_id=6ee49d8f96e64d368c9ca1c7e09a6eb5&reverse_sort=false&page=1&size=10&Appid=${
             import.meta.env.VITE_APPID
           }&Apikey=${import.meta.env.VITE_APIKEY}`
         );
+
         const data = await response.json();
         setSimilarProducts(data.items.filter((p) => p.id !== id));
       } catch (error) {
@@ -44,12 +45,19 @@ const ProductDetail = () => {
   }, [id]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="text-3xl h-dvh text-red-500 text-center flex justify-center items-center">
+        Loading...
+      </div>
+    );
   }
 
   if (!product) {
     return <div>Product not found</div>;
   }
+
+  // Safely access the price value
+  const price = product.current_price;
 
   const scrollLeft = () => {
     scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
@@ -66,39 +74,31 @@ const ProductDetail = () => {
           <img
             src={`${img_base_url}${product.photos[0].url}`}
             alt={product.name}
-            className="w-full h-auto rounded-lg"
+            className="w-full h-auto sm:w-96 sm:h-96 rounded-lg"
           />
         </div>
         <div className="lg:w-1/2 w-full">
           <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
           <p className="text-2xl font-semibold mb-4">
-            ${product.current_price}
+            {price ? `$${price}` : "Price not available"}
           </p>
           <div className="flex items-center mb-4">
             <span className="mr-2">Color:</span>
-            <button
-              className={
-                "w-6 h-6 bg-black rounded-full border-2 border-gray-300 mr-2 "
-              }
-            ></button>
-            <button
-              className={
-                "w-6 h-6 bg-red-600 rounded-full border-2 border-gray-300 mr-2 "
-              }
-            ></button>
-            <button
-              className={
-                "w-6 h-6 bg-blue-600 rounded-full border-2 border-gray-300 mr-2 "
-              }
-            ></button>
+            {product.colors?.map((color, index) => (
+              <button
+                key={index}
+                className={`w-6 h-6 rounded-full border-2 border-gray-300 mr-2`}
+                style={{ backgroundColor: color }}
+              ></button>
+            ))}
           </div>
           <div className="mb-4">
             <span className="mr-2">Size:</span>
-            <button className="border px-3 py-1 rounded-md mr-2">XS</button>
-            <button className="border px-3 py-1 rounded-md mr-2">S</button>
-            <button className="border px-3 py-1 rounded-md mr-2">M</button>
-            <button className="border px-3 py-1 rounded-md mr-2">L</button>
-            <button className="border px-3 py-1 rounded-md mr-2">XL</button>
+            {product.sizes?.map((size, index) => (
+              <button key={index} className="border px-3 py-1 rounded-md mr-2">
+                {size}
+              </button>
+            ))}
           </div>
           <button
             onClick={() => addToCart({ ...product, quantity: 1 })}
@@ -109,9 +109,9 @@ const ProductDetail = () => {
           <div className="mt-4">
             <h2 className="text-xl font-semibold mb-2">Product Detail</h2>
             <ul className="list-disc list-inside">
-              {/* {product.details.map((detail, index) => (
+              {product.details?.map((detail, index) => (
                 <li key={index}>{detail}</li>
-              ))} */}
+              ))}
             </ul>
             <h2 className="text-xl font-semibold mt-4 mb-2">Material</h2>
             <p>Cotton 100%, Polythene 20%</p>
@@ -136,32 +136,32 @@ const ProductDetail = () => {
             ref={scrollRef}
             className="flex overflow-x-scroll scrollbar-hide space-x-4 p-4"
           >
-            {similarProducts
-              .filter((p) => p.id !== product.id)
-              .map((similarProduct) => (
-                <div key={similarProduct.id} className="flex-shrink-0 w-60">
-                  <Link
-                    onClick={() => {
-                      window.scroll(0, 0);
-                    }}
-                    to={`/product/${similarProduct.id}`}
-                  >
-                    <div className="border p-4 rounded-lg">
-                      <img
-                        src={`${img_base_url}${similarProduct.photos[0].url}`}
-                        alt={similarProduct.name}
-                        className="w-full h-48 object-contain mb-4 rounded-lg"
-                      />
-                      <h3 className="text-lg font-bold text-center">
-                        {similarProduct.name}
-                      </h3>
-                      <p className="text-gray-500 font-bold text-center">
-                        ${similarProduct.current_price[0].NGN[0]}
-                      </p>
-                    </div>
-                  </Link>
-                </div>
-              ))}
+            {similarProducts.map((similarProduct) => (
+              <div key={similarProduct.id} className="flex-shrink-0 w-60">
+                <Link
+                  onClick={() => {
+                    window.scroll(0, 0);
+                  }}
+                  to={`/product/${similarProduct.id}`}
+                >
+                  <div className="border p-4 rounded-lg">
+                    <img
+                      src={`${img_base_url}${similarProduct.photos[0].url}`}
+                      alt={similarProduct.name}
+                      className="w-full h-48 object-contain mb-4 rounded-lg"
+                    />
+                    <h3 className="text-lg font-bold text-center">
+                      {similarProduct.name}
+                    </h3>
+                    <p className="text-gray-500 font-bold text-center">
+                      {similarProduct.current_price?.[0]?.NGN?.[0]
+                        ? `₦${similarProduct.current_price[0].NGN[0]}`
+                        : "Price not available"}
+                    </p>
+                  </div>
+                </Link>
+              </div>
+            ))}
           </div>
           <button
             onClick={scrollRight}

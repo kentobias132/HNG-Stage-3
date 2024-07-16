@@ -25,6 +25,8 @@ const ProductListing = () => {
           ...prevProducts,
           [currentPage]: data.items,
         }));
+        console.log(data.items);
+
         setTotalPages(Math.ceil(data.total / pageSize));
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -36,7 +38,11 @@ const ProductListing = () => {
   }, [currentPage]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="text-3xl h-dvh text-red-500 text-center flex justify-center items-center">
+        Loading...
+      </div>
+    );
   }
 
   const handlePreviousPage = () => {
